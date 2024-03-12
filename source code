@@ -1,0 +1,49 @@
+import pandas as pd
+import pickle
+import logging
+import os
+
+with open('ml-model.pkl', 'rb') as f:
+    MODEL = pickle.load(f)
+
+FEATURES_MASK = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS',\
+                 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
+
+app = Flask(_name_)
+
+@app.route('/', methods=['GET'])
+def server_check():
+    return "I'M ALIVE!"
+
+@app.route('/predict', methods=['POST'])
+def predictor():
+    content = request.json
+
+    try:
+        features = pd.DataFrame([content])
+        features = features[FEATURES_MASK]
+    except:
+        logging.exception("The JSON file was broke.")
+        return jsonify(status='error', predict=-1)
+
+    pred = MODEL.predict(features)[0]
+
+    return jsonify(status='ok', predict=pred)
+
+if _name=='main_':
+    app.run( debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)) )
+#!/bin/bash
+
+gcloud init --skip-diagnostics
+
+PROJECT_ID=$(gcloud projects list | awk '{if(NR==2){print $1}}')
+PROJECT_NUMBER=$(gcloud projects list | awk '{if(NR==2){print $3}}')
+/* Public domain project by Cloud Under (https://cloudunder.io).
+ * Repository: https://github.com/CloudUnder/lambda-edge-nice-urls
+ */
+
+const config = {
+	suffix: '.html',
+	appendToDirs: 'index.html',
+	removeTrailingSlash: false,
+};
